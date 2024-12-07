@@ -1,29 +1,50 @@
-import image from "./assets/fitness-tracker-animate.svg"
-import { FaWeightHanging } from "react-icons/fa6"
-import { FaRuler } from "react-icons/fa"
-import { useState } from "react"
+import image from "./assets/fitness-tracker-animate.svg";
+import { FaWeightHanging } from "react-icons/fa6";
+import { FaRuler } from "react-icons/fa";
+import { useState } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const[peso, setPeso] = useState(0);
   const[altura, setAltura] = useState(0);
   const[loading, setLoading] = useState(false);
   const[resultado, setResultado] = useState("");
+  const[menssagem, setMenssagem] = useState("");
 
   function clickCalcular(){
+    if(!peso || !altura){
+      toast.info("Preencha todos os campos")
+      return
+    }
     setLoading(true)
     const valorImc = peso / (altura * altura)
+
+    if(valorImc < 18.5){
+      setMenssagem("Vocâ está desnutrido")
+    }else if(valorImc >= 18.5 && valorImc <= 24.9){
+      setMenssagem("Você está no peso ideal")
+    }else if(valorImc >= 25 && valorImc <= 29.9){
+      setMenssagem("Você está com sobre peso")
+    }else if(valorImc >=30 && valorImc <= 34.9){
+      setMenssagem("Você está com oobesidade nível 1")
+    }else if(valorImc >= 35 && valorImc <= 39.9){
+      setMenssagem("Você está com obesidade grau 2")
+    }else{
+      setMenssagem("Você está com obesidade nivel 3")
+    }
     
-    setResultado(valorImc.toFixed(2))
-    console.log(valorImc)
     setTimeout(
       () => {
         setLoading(false)
+        setResultado(valorImc.toFixed(2))
       }, 1500
     )
   }
 
   return (
     <div className="w-full h-screen flex bg-black">
+      <ToastContainer/>
       <div className="w-[50%] h-full flex items-center justify-center">
         <img src={image} alt="" width={600}/>
       </div>
@@ -94,7 +115,7 @@ function App() {
                     <p className="text-white text-[18px]">Seu IMC</p>
                   </div>
                   <div className="w-[80%] flex items-center justify-center">
-                    <p className="text-[20px] text-white">Seu peso está ideal</p>
+                    <p className="text-[17px] text-white">{menssagem}</p>
                   </div>
                 </div>
                 <div className="w-full bg-gray-400 h-[1px] mt-4"></div>
